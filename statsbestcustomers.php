@@ -100,11 +100,25 @@ class statsbestcustomers extends ModuleGrid
         $this->ps_versions_compliancy = ['min' => '1.7.1.0', 'max' => _PS_VERSION_];
     }
 
+    /**
+     * Install the module and register the stats dashboard hook.
+     *
+     * @return bool True on successful installation, false otherwise
+     */
     public function install()
     {
         return parent::install() && $this->registerHook('displayAdminStatsModules');
     }
 
+    /**
+     * Render the best-customers ranking grid on the admin statistics dashboard.
+     *
+     * Outputs a CSV file when an export request is detected; otherwise returns HTML.
+     *
+     * @param array $params Hook parameters passed by PrestaShop (unused)
+     *
+     * @return string HTML output for the statistics widget
+     */
     public function hookDisplayAdminStatsModules($params)
     {
         $engine_params = [
@@ -147,6 +161,16 @@ class statsbestcustomers extends ModuleGrid
         return $this->html;
     }
 
+    /**
+     * Build and execute the customer ranking query, populating $this->_values and $this->_totalCount.
+     *
+     * Joins orders and connection logs to compute visit count, money spent, and valid order count
+     * per customer within the selected date range. Applies multi-shop context restrictions.
+     *
+     * @return void
+     *
+     * @complexity O(c * o) where c = customers and o = orders per customer in the period
+     */
     public function getData()
     {
         $this->query = '
