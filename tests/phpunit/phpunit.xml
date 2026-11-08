@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    bootstrap="bootstrap.php"
+    colors="false"
+    stopOnFailure="false"
+    backupGlobals="false"
+>
+    <testsuite name="module-tests">
+        <file>ModuleTestSuite.php</file>
+    </testsuite>
+</phpunit>
